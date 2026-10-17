@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/entities/gym_facility_entity.dart';
@@ -19,11 +20,8 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (message.isFromBot) {
-      return _buildBotBubble(context);
-    } else {
-      return _buildUserBubble(context);
-    }
+    final bubbleWidget = message.isFromBot ? _buildBotBubble(context) : _buildUserBubble(context);
+    return bubbleWidget.animate().fadeIn(duration: 250.ms).slideY(begin: 0.06, end: 0);
   }
 
   Widget _buildBotBubble(BuildContext context) {
@@ -43,7 +41,7 @@ class ChatBubble extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppTheme.lightBlueBg,
-                  border: Border.all(color: const Color(0xFFD3E7FF), width: 1),
+                  border: Border.all(color: AppTheme.facilityCardBorderSoft, width: 1),
                 ),
                 child: const Icon(
                   Icons.smart_toy_rounded,
@@ -57,7 +55,7 @@ class ChatBubble extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: const BoxDecoration(
-                    color: Color(0xFFF3F4F6),
+                    color: AppTheme.cardGray,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),

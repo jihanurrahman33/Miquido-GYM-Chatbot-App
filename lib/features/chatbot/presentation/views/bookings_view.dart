@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/empty_state_view.dart';
@@ -52,7 +53,9 @@ class BookingsView extends GetView<BookingsController> {
                 return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
               }
 
-              final items = controller.filteredBookings;
+              final items = controller.pagedBookings;
+              final isPageLoading = controller.isPageLoading.value;
+
               if (items.isEmpty) {
                 return EmptyStateView(
                   icon: Icons.confirmation_number_outlined,
@@ -65,11 +68,23 @@ class BookingsView extends GetView<BookingsController> {
                 );
               }
 
+              final totalItemCount = items.length + (isPageLoading ? 1 : 0);
+
               return ListView.separated(
+                controller: controller.scrollController,
                 padding: const EdgeInsets.all(20),
-                itemCount: items.length,
+                itemCount: totalItemCount,
                 separatorBuilder: (_, _) => const SizedBox(height: 16),
                 itemBuilder: (context, index) {
+                  if (index >= items.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryBlue),
+                      ),
+                    );
+                  }
+
                   final b = items[index];
                   return Container(
                     padding: const EdgeInsets.all(20),
@@ -102,7 +117,7 @@ class BookingsView extends GetView<BookingsController> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: b.isConfirmed ? const Color(0xFFEFFDF4) : const Color(0xFFF3F4F6),
+                                color: b.isConfirmed ? AppTheme.successLightBg : AppTheme.cardGray,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -171,7 +186,7 @@ class BookingsView extends GetView<BookingsController> {
                         ),
                       ],
                     ),
-                  );
+                  ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.05, end: 0);
                 },
               );
             }),
@@ -185,7 +200,7 @@ class BookingsView extends GetView<BookingsController> {
     final isSelected = controller.selectedTab.value == key;
     return Expanded(
       child: GestureDetector(
-        onTap: () => controller.selectedTab.value = key,
+        onTap: () => controller.switchTab(key),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../../core/utils/app_snackbar.dart';
 import '../../domain/entities/user_metric_entity.dart';
 import '../../domain/usecases/get_user_metrics_usecase.dart';
 
@@ -69,14 +70,13 @@ class StatisticsController extends GetxController {
     result.when(
       success: (updated) {
         metrics.value = updated;
-        Get.snackbar(
+        AppSnackbar.success(
           'Goals Updated 🎯',
-          'Daily targets updated successfully!',
-          snackPosition: SnackPosition.TOP,
+          'Daily targets updated and synchronized across your metrics.',
         );
       },
       failure: (failure) {
-        Get.snackbar('Error', failure.message);
+        AppSnackbar.error('Error', failure.message);
       },
     );
   }

@@ -110,10 +110,21 @@ lib/
   - `ActivitiesChart`: Cubic Bezier spline with gradient shader and an interactive Wednesday peak indicator (`3h 14min`).
   - `WorkoutCard`: Custom vector treadmill platform and runner silhouette.
   - `FloatingNavBar`: Elevated floating pill bottom bar matching Figma specifications with active indicator dots.
+- **Lazy Loading & Scroll Pagination:**
+  - **Explore Facilities:** Infinite scroll pagination via `ScrollController` listener, batching items in 4-item pages with live bottom loading spinners and empty search filters.
+  - **My Bookings:** Lazy pagination on history and active passes list with threshold triggers.
+- **Micro-Interactions, Animations & Lottie:**
+  - **Lottie Vector Animations:** High-performance procedural Bodymovin celebration confetti burst on workout completion (`assets/animations/celebration.json`) and gentle floating disc pulse on empty states (`assets/animations/empty.json`).
+  - **Declarative Staggered Animations (`flutter_animate`):** Smooth entrance fades, vertical translations (`slideY`), scale bounces, and interval countdown ring pulses across `HomeView`, `StatisticsView`, `ChatbotView`, and `WorkoutTrackerView`.
+- **Zero Hardcoded Colors & Centralized Tokens:**
+  - Centralized palette in `AppTheme`: all status colors (`successGreen`, `errorRed`, `warningAmber`), backgrounds, borders, text shades, and vector illustration tokens.
+  - Zero hardcoded `Color(0x...)` across presentation views and core widgets.
+- **Centralized Branded Snackbar System (`AppSnackbar`):**
+  - Type-safe snackbar alerts for `success`, `error`, `warning`, and `info` with distinct status iconography, rounded card borders, soft drop shadows, and retry actions.
 - **Micro-Interactions & States:**
   - **Shimmer Skeleton Loading:** Smooth animated gradients displayed during data acquisition.
-  - **Standardized Error Views:** Actionable retry buttons and informative failure messages.
-  - **Standardized Empty States:** Engaging icons, clear typography, and navigation triggers.
+  - **Standardized Error Views:** Actionable retry buttons and informative failure messages with shake animation.
+  - **Standardized Empty States:** Engaging Lottie animation, clear typography, and navigation triggers.
   - **Audio Recording Feedback:** Pulse timer banner and one-tap voice query simulation.
   - **Turnstile QR Pass Generation:** Digital access pass format for seamless gym check-in.
 

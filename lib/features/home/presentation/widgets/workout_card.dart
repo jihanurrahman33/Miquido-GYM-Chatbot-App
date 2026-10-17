@@ -124,7 +124,7 @@ class _RunnerIllustrationPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // Treadmill / platform line
     final platformPaint = Paint()
-      ..color = const Color(0xFFD4E6FC)
+      ..color = AppTheme.illustrationTreadmillBelt
       ..strokeWidth = 3.5
       ..strokeCap = StrokeCap.round;
 
@@ -137,7 +137,7 @@ class _RunnerIllustrationPainter extends CustomPainter {
 
     // Treadmill handle/front bar
     final barPaint = Paint()
-      ..color = const Color(0xFFE4F0FD)
+      ..color = AppTheme.illustrationTreadmillBase
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
@@ -156,12 +156,12 @@ class _RunnerIllustrationPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(size.width - 10, baseLineY - 4),
       3,
-      Paint()..color = const Color(0xFFFF6E79),
+      Paint()..color = AppTheme.illustrationJersey,
     );
 
     // Runner Leg - Left (reaching forward in stride)
     final blueLegPaint = Paint()
-      ..color = const Color(0xFF68B1FF)
+      ..color = AppTheme.illustrationShorts
       ..style = PaintingStyle.fill;
 
     final legPath1 = Path()
@@ -187,7 +187,7 @@ class _RunnerIllustrationPainter extends CustomPainter {
 
     // Runner Torso / Red Coral Jacket
     final jacketPaint = Paint()
-      ..color = const Color(0xFFFF6456)
+      ..color = AppTheme.illustrationShoe1
       ..style = PaintingStyle.fill;
 
     final torsoPath = Path()
@@ -201,7 +201,7 @@ class _RunnerIllustrationPainter extends CustomPainter {
 
     // Runner Arm - reaching forward
     final armPaint = Paint()
-      ..color = const Color(0xFFFF8275)
+      ..color = AppTheme.illustrationShoe2
       ..strokeWidth = 6
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
@@ -216,7 +216,7 @@ class _RunnerIllustrationPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(92, baseLineY - 69),
       4,
-      Paint()..color = const Color(0xFFFFCCBD),
+      Paint()..color = AppTheme.illustrationSkin,
     );
 
     // Runner Head & Beanie
@@ -224,11 +224,11 @@ class _RunnerIllustrationPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(62, baseLineY - 92),
       8,
-      Paint()..color = const Color(0xFFFFCCBD),
+      Paint()..color = AppTheme.illustrationSkin,
     );
 
     // Blue beanie / athletic cap
-    final capPaint = Paint()..color = const Color(0xFF0070F0);
+    final capPaint = Paint()..color = AppTheme.primaryBlue;
     final capPath = Path()
       ..addArc(
         Rect.fromCircle(center: Offset(61, baseLineY - 95), radius: 8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/app_snackbar.dart';
 import '../../domain/entities/workout_entity.dart';
 
 class WorkoutDetailView extends StatelessWidget {
@@ -123,12 +124,9 @@ class WorkoutDetailView extends StatelessWidget {
               height: 54,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.snackbar(
+                  AppSnackbar.success(
                     'Workout Completed! 👏',
                     '350 kcal logged to your daily activity.',
-                    backgroundColor: AppTheme.successGreen,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.TOP,
                   );
                   Get.back();
                 },

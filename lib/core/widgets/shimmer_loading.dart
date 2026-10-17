@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class ShimmerLoading extends StatefulWidget {
   final double width;
@@ -48,7 +49,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading> with SingleTickerProvid
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            color: const Color(0xFFE5E7EB).withValues(alpha: _animation.value),
+            color: AppTheme.borderLight.withValues(alpha: _animation.value),
             borderRadius: BorderRadius.circular(widget.borderRadius),
           ),
         );

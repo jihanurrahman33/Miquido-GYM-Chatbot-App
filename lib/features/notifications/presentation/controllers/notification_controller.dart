@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../../core/utils/app_snackbar.dart';
 import '../../domain/entities/notification_item_entity.dart';
 
 class NotificationController extends GetxController {
@@ -29,7 +30,7 @@ class NotificationController extends GetxController {
 
   void markAllAsRead() {
     notifications.assignAll(notifications.map((n) => n.copyWith(isRead: true)).toList());
-    Get.snackbar('Notifications', 'All marked as read');
+    AppSnackbar.success('Notifications', 'All marked as read');
   }
 
   void clearAll() {

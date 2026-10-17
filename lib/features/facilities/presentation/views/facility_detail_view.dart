@@ -108,7 +108,7 @@ class FacilityDetailView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFFBEB),
+                          color: AppTheme.warningLightBg,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -120,7 +120,7 @@ class FacilityDetailView extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFFB45309),
+                                color: AppTheme.warningDarkText,
                               ),
                             ),
                           ],

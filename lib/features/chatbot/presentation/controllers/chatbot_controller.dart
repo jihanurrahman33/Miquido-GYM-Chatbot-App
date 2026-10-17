@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/app_snackbar.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/entities/gym_facility_entity.dart';
 import '../../domain/usecases/chat_usecases.dart';
@@ -93,7 +95,7 @@ class ChatbotController extends GetxController {
           });
         },
         failure: (fail) {
-          Get.snackbar('FitBot', fail.message);
+          AppSnackbar.error('FitBot Error', fail.message);
         },
       );
     } finally {
@@ -188,14 +190,14 @@ class ChatbotController extends GetxController {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF0070F0),
+                color: AppTheme.primaryBlue,
               ),
             ),
             Text(
               '${facility.address} • ${facility.priceInfo}',
               style: const TextStyle(
                 fontSize: 13,
-                color: Color(0xFF72777A),
+                color: AppTheme.mutedText,
               ),
             ),
             const SizedBox(height: 20),
@@ -216,14 +218,14 @@ class ChatbotController extends GetxController {
                   return ChoiceChip(
                     label: Text(slot),
                     selected: isSelected,
-                    selectedColor: const Color(0xFFEFF6FF),
+                    selectedColor: AppTheme.chipSelectedBg,
                     backgroundColor: Colors.white,
                     labelStyle: TextStyle(
-                      color: isSelected ? const Color(0xFF0070F0) : const Color(0xFF303437),
+                      color: isSelected ? AppTheme.primaryBlue : AppTheme.bodyText,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     ),
                     side: BorderSide(
-                      color: isSelected ? const Color(0xFF0070F0) : const Color(0xFFE5E7EB),
+                      color: isSelected ? AppTheme.primaryBlue : AppTheme.borderLight,
                     ),
                     onSelected: (_) => selectedSlot.value = slot,
                   );
@@ -243,7 +245,7 @@ class ChatbotController extends GetxController {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0070F0),
+                  backgroundColor: AppTheme.primaryBlue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -276,22 +278,18 @@ class ChatbotController extends GetxController {
 
     result.when(
       success: (booking) {
-        Get.snackbar(
+        AppSnackbar.success(
           'Pass Confirmed! 🎟️',
           '${facility.name} pass booked for $slotTime.',
-          backgroundColor: const Color(0xFF0070F0),
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 4),
           mainButton: TextButton(
             onPressed: () => Get.toNamed(AppRoutes.bookings),
-            child: const Text('VIEW PASS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+            child: const Text('VIEW PASS', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w800)),
           ),
         );
         sendMessage('I just confirmed my pass for ${facility.name} at $slotTime');
       },
       failure: (fail) {
-        Get.snackbar('Booking Error', fail.message);
+        AppSnackbar.error('Booking Error', fail.message);
       },
     );
   }

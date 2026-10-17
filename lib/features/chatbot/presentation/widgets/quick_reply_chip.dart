@@ -22,7 +22,7 @@ class QuickReplyChip extends StatelessWidget {
           color: AppTheme.lightBlueBg,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: const Color(0xFFD3E7FF),
+            color: AppTheme.facilityCardBorderSoft,
             width: 1,
           ),
         ),

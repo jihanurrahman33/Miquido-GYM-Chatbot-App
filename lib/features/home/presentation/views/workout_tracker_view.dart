@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../controllers/workout_tracker_controller.dart';
@@ -36,16 +38,15 @@ class WorkoutTrackerView extends GetView<WorkoutTrackerController> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEFFDF4),
-                      shape: BoxShape.circle,
+                  SizedBox(
+                    width: 140,
+                    height: 140,
+                    child: Lottie.asset(
+                      'assets/animations/celebration.json',
+                      repeat: true,
                     ),
-                    child: const Icon(Icons.emoji_events_rounded, color: AppTheme.successGreen, size: 44),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   const Text(
                     'Workout Completed! 🎉',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: AppTheme.darkText),
@@ -73,7 +74,7 @@ class WorkoutTrackerView extends GetView<WorkoutTrackerController> {
                 ],
               ),
             ),
-          );
+          ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1));
         }
 
         final currentEx = controller.exercises[controller.currentExerciseIndex.value];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/empty_state_view.dart';
@@ -103,7 +104,10 @@ class SearchExploreView extends GetView<SearchExploreController> {
                   return const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue));
                 }
 
-                if (controller.filteredFacilities.isEmpty) {
+                final items = controller.pagedFacilities;
+                final isPageLoading = controller.isPageLoading.value;
+
+                if (items.isEmpty) {
                   return EmptyStateView(
                     icon: Icons.search_off_rounded,
                     title: 'No Facilities Found',
@@ -116,13 +120,25 @@ class SearchExploreView extends GetView<SearchExploreController> {
                   );
                 }
 
+                final totalCount = items.length + (isPageLoading ? 1 : 0);
+
                 return ListView.separated(
+                  controller: controller.scrollController,
                   padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
                   physics: const BouncingScrollPhysics(),
-                  itemCount: controller.filteredFacilities.length,
+                  itemCount: totalCount,
                   separatorBuilder: (_, _) => const SizedBox(height: 14),
                   itemBuilder: (context, index) {
-                    final gym = controller.filteredFacilities[index];
+                    if (index >= items.length) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryBlue),
+                        ),
+                      );
+                    }
+
+                    final gym = items[index];
                     return GestureDetector(
                       onTap: () => Get.toNamed(AppRoutes.facilityDetail, arguments: gym),
                       child: Container(
@@ -197,7 +213,7 @@ class SearchExploreView extends GetView<SearchExploreController> {
                           ],
                         ),
                       ),
-                    );
+                    ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.05, end: 0);
                   },
                 );
               }),

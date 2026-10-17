@@ -57,7 +57,7 @@ class NotificationsView extends GetView<NotificationController> {
                 color: n.isRead ? Colors.white : AppTheme.lightBlueBg.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: n.isRead ? AppTheme.borderLight : const Color(0xFFBFDDFF),
+                  color: n.isRead ? AppTheme.borderLight : AppTheme.lightBlueBorder,
                 ),
               ),
               child: Row(

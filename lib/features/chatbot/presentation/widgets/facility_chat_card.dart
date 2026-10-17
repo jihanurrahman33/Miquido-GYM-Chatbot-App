@@ -20,9 +20,9 @@ class FacilityChatCard extends StatelessWidget {
         margin: const EdgeInsets.only(top: 8, bottom: 4),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFEFF6FF),
+          color: AppTheme.facilityCardBg,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFD6E8FE)),
+          border: Border.all(color: AppTheme.facilityCardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class FacilityChatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFD6E8FE)),
+        border: Border.all(color: AppTheme.facilityCardBorder),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

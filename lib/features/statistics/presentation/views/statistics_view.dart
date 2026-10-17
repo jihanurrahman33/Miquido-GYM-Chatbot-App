@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -74,7 +75,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       letterSpacing: -0.5,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms),
 
                 const SizedBox(height: 8),
 
@@ -89,7 +90,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       color: AppTheme.bodyText,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 50.ms),
 
                 const SizedBox(height: 20),
 
@@ -101,7 +102,7 @@ class StatisticsView extends GetView<StatisticsController> {
                     selectedIndex: controller.selectedDayIndex.value,
                     onSelectDay: controller.selectDay,
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 100.ms).slideY(begin: 0.05, end: 0),
 
                 const SizedBox(height: 32),
 
@@ -116,7 +117,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       color: AppTheme.darkText,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 150.ms),
 
                 const SizedBox(height: 16),
 
@@ -150,7 +151,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       ),
                     ],
                   ),
-                ),
+                ).animate().fadeIn(duration: 450.ms, delay: 200.ms).slideX(begin: 0.05, end: 0),
 
                 const SizedBox(height: 32),
 
@@ -165,7 +166,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       color: AppTheme.darkText,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 250.ms),
 
                 const SizedBox(height: 20),
 
@@ -224,7 +225,7 @@ class StatisticsView extends GetView<StatisticsController> {
                       ],
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 450.ms, delay: 300.ms).scale(begin: const Offset(0.96, 0.96), end: const Offset(1, 1)),
 
                 const SizedBox(height: 24),
 
@@ -234,9 +235,9 @@ class StatisticsView extends GetView<StatisticsController> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FDF4),
+                      color: AppTheme.successLightBg2,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFBBF7D0)),
+                      border: Border.all(color: AppTheme.successBorder),
                     ),
                     child: Row(
                       children: const [
@@ -252,14 +253,14 @@ class StatisticsView extends GetView<StatisticsController> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF166534),
+                              color: AppTheme.successDarkText,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 350.ms).slideY(begin: 0.05, end: 0),
 
                 const SizedBox(height: 24),
 
@@ -267,7 +268,7 @@ class StatisticsView extends GetView<StatisticsController> {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   child: CaloriesBarChart(),
-                ),
+                ).animate().fadeIn(duration: 450.ms, delay: 400.ms).slideY(begin: 0.05, end: 0),
               ],
             ),
           );

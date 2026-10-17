@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../theme/app_theme.dart';
 
 class ErrorView extends StatelessWidget {
@@ -22,13 +23,13 @@ class ErrorView extends StatelessWidget {
             Container(
               width: 56,
               height: 56,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEE2E2),
+              decoration: const BoxDecoration(
+                color: AppTheme.errorLightBg2,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.error_outline_rounded,
-                color: Color(0xFFDC2626),
+                color: AppTheme.errorRed,
                 size: 28,
               ),
             ),
@@ -67,6 +68,6 @@ class ErrorView extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 300.ms).shake(duration: 400.ms, hz: 2);
   }
 }

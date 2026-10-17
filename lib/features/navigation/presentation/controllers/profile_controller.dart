@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/storage/storage_service.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/app_snackbar.dart';
 import '../../../statistics/presentation/controllers/statistics_controller.dart';
 
 class ProfileController extends GetxController {
@@ -62,7 +64,7 @@ class ProfileController extends GetxController {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Sleep Goal', style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text('${tempSleep.value.toInt()} hours', style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF0070F0))),
+                      Text('${tempSleep.value.toInt()} hours', style: const TextStyle(fontWeight: FontWeight.w700, color: AppTheme.primaryBlue)),
                     ],
                   ),
                   Slider(
@@ -70,7 +72,7 @@ class ProfileController extends GetxController {
                     min: 5.0,
                     max: 12.0,
                     divisions: 7,
-                    activeColor: const Color(0xFF52BAFF),
+                    activeColor: AppTheme.ringSleep,
                     onChanged: (v) => tempSleep.value = v,
                   ),
                 ],
@@ -86,7 +88,7 @@ class ProfileController extends GetxController {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Active Calories Goal', style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text('${tempCalories.value} kcal', style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFFF6E79))),
+                      Text('${tempCalories.value} kcal', style: const TextStyle(fontWeight: FontWeight.w700, color: AppTheme.ringCalories)),
                     ],
                   ),
                   Slider(
@@ -94,7 +96,7 @@ class ProfileController extends GetxController {
                     min: 1000,
                     max: 4000,
                     divisions: 30,
-                    activeColor: const Color(0xFFFF6E79),
+                    activeColor: AppTheme.ringCalories,
                     onChanged: (v) => tempCalories.value = v.toInt(),
                   ),
                 ],
@@ -110,7 +112,7 @@ class ProfileController extends GetxController {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Daily Steps Goal', style: TextStyle(fontWeight: FontWeight.w600)),
-                      Text('${tempSteps.value} steps', style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFFFFC85C))),
+                      Text('${tempSteps.value} steps', style: const TextStyle(fontWeight: FontWeight.w700, color: AppTheme.ringSteps)),
                     ],
                   ),
                   Slider(
@@ -118,7 +120,7 @@ class ProfileController extends GetxController {
                     min: 2000,
                     max: 20000,
                     divisions: 18,
-                    activeColor: const Color(0xFFFFC85C),
+                    activeColor: AppTheme.ringSteps,
                     onChanged: (v) => tempSteps.value = v.toInt(),
                   ),
                 ],
@@ -142,9 +144,10 @@ class ProfileController extends GetxController {
                   );
 
                   Get.back();
+                  AppSnackbar.success('Targets Updated', 'Your daily health targets have been synced across all statistics.');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0070F0),
+                  backgroundColor: AppTheme.primaryBlue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
@@ -160,10 +163,9 @@ class ProfileController extends GetxController {
 
   Future<void> clearCache() async {
     await _storageService.clear();
-    Get.snackbar(
+    AppSnackbar.info(
       'Cache Reset',
       'Local storage data has been restored to defaults.',
-      snackPosition: SnackPosition.TOP,
     );
   }
 }

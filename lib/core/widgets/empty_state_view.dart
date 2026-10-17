@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lottie/lottie.dart';
 import '../theme/app_theme.dart';
 
 class EmptyStateView extends StatelessWidget {
@@ -25,18 +27,23 @@ class EmptyStateView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: AppTheme.lightBlueBg,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                color: AppTheme.primaryBlue,
-                size: 32,
-              ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Lottie.asset(
+                    'assets/animations/empty.json',
+                    repeat: true,
+                  ),
+                ),
+                Icon(
+                  icon,
+                  color: AppTheme.primaryBlue,
+                  size: 28,
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Text(
@@ -74,6 +81,6 @@ class EmptyStateView extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 350.ms).scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));
   }
 }

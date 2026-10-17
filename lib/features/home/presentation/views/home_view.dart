@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -61,7 +62,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                ),
+                ).animate().fadeIn(duration: 350.ms).slideY(begin: -0.1, end: 0),
 
                 const SizedBox(height: 12),
 
@@ -77,7 +78,7 @@ class HomeView extends GetView<HomeController> {
                       letterSpacing: -0.5,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
 
                 const SizedBox(height: 24),
 
@@ -92,7 +93,7 @@ class HomeView extends GetView<HomeController> {
                       color: AppTheme.darkText,
                     ),
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 150.ms),
 
                 const SizedBox(height: 16),
 
@@ -117,7 +118,7 @@ class HomeView extends GetView<HomeController> {
                       );
                     },
                   ),
-                ),
+                ).animate().fadeIn(duration: 450.ms, delay: 200.ms).slideX(begin: 0.05, end: 0),
 
                 const SizedBox(height: 32),
 
@@ -152,7 +153,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 250.ms),
 
                 const SizedBox(height: 16),
 
@@ -177,7 +178,7 @@ class HomeView extends GetView<HomeController> {
                       );
                     },
                   ),
-                ),
+                ).animate().fadeIn(duration: 450.ms, delay: 300.ms).slideX(begin: 0.05, end: 0),
 
                 const SizedBox(height: 32),
 
@@ -225,7 +226,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                ),
+                ).animate().fadeIn(duration: 400.ms, delay: 350.ms),
 
                 const SizedBox(height: 16),
 
@@ -235,7 +236,7 @@ class HomeView extends GetView<HomeController> {
                   child: ActivitiesChart(
                     points: controller.weeklyActivities,
                   ),
-                ),
+                ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideY(begin: 0.05, end: 0),
               ],
             ),
           );

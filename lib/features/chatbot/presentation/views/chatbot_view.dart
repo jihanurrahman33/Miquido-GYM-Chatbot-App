@@ -47,7 +47,7 @@ class ChatbotView extends GetView<ChatbotController> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppTheme.lightBlueBg,
-                    border: Border.all(color: const Color(0xFFD6E8FE), width: 1),
+                    border: Border.all(color: AppTheme.facilityCardBorder, width: 1),
                   ),
                   child: const Icon(
                     Icons.smart_toy_rounded,
@@ -184,7 +184,7 @@ class ChatbotView extends GetView<ChatbotController> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6),
+                            color: AppTheme.cardGray,
                             borderRadius: BorderRadius.circular(18),
                           ),
                           child: Row(
@@ -224,9 +224,9 @@ class ChatbotView extends GetView<ChatbotController> {
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFEF2F2),
+                color: AppTheme.errorLightBg,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFFCA5A5)),
+                border: Border.all(color: AppTheme.errorBorder),
               ),
               child: Row(
                 children: [
@@ -234,7 +234,7 @@ class ChatbotView extends GetView<ChatbotController> {
                     width: 10,
                     height: 10,
                     decoration: const BoxDecoration(
-                      color: Color(0xFFEF4444),
+                      color: AppTheme.errorRedDot,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -243,7 +243,7 @@ class ChatbotView extends GetView<ChatbotController> {
                     child: Text(
                       'Listening... (${controller.recordingSeconds.value}s) - Speak now',
                       style: const TextStyle(
-                        color: Color(0xFFB91C1C),
+                        color: AppTheme.errorDarkText,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -254,7 +254,7 @@ class ChatbotView extends GetView<ChatbotController> {
                     child: const Text(
                       'Stop',
                       style: TextStyle(
-                        color: Color(0xFFEF4444),
+                        color: AppTheme.errorRedDot,
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
                       ),
