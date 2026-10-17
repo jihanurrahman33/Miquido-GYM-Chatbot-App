@@ -1,0 +1,265 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../routes/app_routes.dart';
+import '../controllers/home_controller.dart';
+import '../widgets/workout_card.dart';
+import '../widgets/gym_card.dart';
+import '../widgets/activities_chart.dart';
+
+class HomeView extends GetView<HomeController> {
+  const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.bgWhite,
+      body: SafeArea(
+        bottom: false,
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryBlue),
+            );
+          }
+
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 120),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top App Bar Icons
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildCircleIconButton(
+                        icon: Icons.grid_view_rounded,
+                        onTap: () {},
+                      ),
+                      Row(
+                        children: [
+                          _buildCircleIconButton(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            onTap: () => Get.toNamed(AppRoutes.chatbot),
+                          ),
+                          const SizedBox(width: 12),
+                          _buildCircleIconButton(
+                            icon: Icons.notifications_none_rounded,
+                            onTap: () {
+                              Get.snackbar(
+                                'Notifications',
+                                'No new alerts. Keep up your active streak!',
+                                snackPosition: SnackPosition.TOP,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Large Title: Home
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    'Home',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      color: AppTheme.darkText,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Section: Upcoming
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    'Upcoming',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.darkText,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Workout Cards Carousel
+                SizedBox(
+                  height: 175,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: controller.workouts.length,
+                    itemBuilder: (context, index) {
+                      final workout = controller.workouts[index];
+                      return WorkoutCard(
+                        workout: workout,
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.workoutDetail,
+                            arguments: workout,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Section: Gyms near you
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Gyms near you',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.darkText,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: const [
+                          Icon(Icons.location_on, size: 16, color: AppTheme.mutedText),
+                          SizedBox(width: 4),
+                          Text(
+                            'Starowiślna 12',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.mutedText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Gyms horizontal list
+                SizedBox(
+                  height: 155,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: controller.nearbyGyms.length,
+                    itemBuilder: (context, index) {
+                      final gym = controller.nearbyGyms[index];
+                      return GymCard(
+                        gym: gym,
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.facilityDetail,
+                            arguments: gym,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Section: Activities
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Activities',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.darkText,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.lightBlueBg,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              controller.selectedPeriod.value,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryBlue,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 18,
+                              color: AppTheme.primaryBlue,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Activities Curve Chart
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ActivitiesChart(
+                    points: controller.weeklyActivities,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildCircleIconButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          border: Border.all(color: AppTheme.borderLight, width: 1.2),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: AppTheme.darkText,
+        ),
+      ),
+    );
+  }
+}
