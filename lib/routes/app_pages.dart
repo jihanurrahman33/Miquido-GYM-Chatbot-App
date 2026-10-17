@@ -38,11 +38,13 @@ class AppPages {
     GetPage(
       name: AppRoutes.facilityDetail,
       page: () => const FacilityDetailView(),
+      binding: NavigationBinding(),
       transition: Transition.fadeIn,
     ),
     GetPage(
       name: AppRoutes.workoutDetail,
       page: () => const WorkoutDetailView(),
+      binding: NavigationBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(

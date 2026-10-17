@@ -9,7 +9,16 @@ class WorkoutDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutEntity workout = Get.arguments as WorkoutEntity;
+    final WorkoutEntity workout = (Get.arguments is WorkoutEntity)
+        ? (Get.arguments as WorkoutEntity)
+        : const WorkoutEntity(
+            id: '1',
+            title: 'Workout at Aleja Pokoju',
+            timeString: 'Tomorrow, 2:45 PM',
+            category: 'Gym Training',
+            location: 'Aleja Pokoju 16, Kraków',
+            bgColorHex: 0xFFEBF2FE,
+          );
 
     return Scaffold(
       backgroundColor: AppTheme.bgWhite,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../routes/app_routes.dart';
 import '../../../chatbot/domain/entities/gym_facility_entity.dart';
 import '../../../chatbot/presentation/controllers/chatbot_controller.dart';
 
@@ -9,8 +10,18 @@ class FacilityDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GymFacilityEntity facility = Get.arguments as GymFacilityEntity;
-    final chatbotController = Get.find<ChatbotController>();
+    final GymFacilityEntity facility = (Get.arguments is GymFacilityEntity)
+        ? (Get.arguments as GymFacilityEntity)
+        : const GymFacilityEntity(
+            id: 'gym_1',
+            name: 'Energym Fitness Club',
+            address: 'Wrocławska 20, Kraków',
+            distanceMeters: 450,
+            rating: 4.9,
+            amenities: ['Gym', 'SPA', 'Pool', 'Sauna', 'Personal Trainer'],
+            priceInfo: '35 PLN',
+            openingHours: '06:00 - 23:00',
+          );
 
     return Scaffold(
       backgroundColor: AppTheme.bgWhite,
@@ -253,8 +264,12 @@ class FacilityDetailView extends StatelessWidget {
                     height: 54,
                     child: ElevatedButton(
                       onPressed: () {
-                        chatbotController.bookFacility(facility);
-                        Get.back();
+                        if (Get.isRegistered<ChatbotController>()) {
+                          Get.find<ChatbotController>().bookFacility(facility);
+                          Get.back();
+                        } else {
+                          Get.toNamed(AppRoutes.chatbot);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue,
