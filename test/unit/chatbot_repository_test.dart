@@ -41,7 +41,9 @@ void main() {
     });
 
     test('Loads initial conversation history matching Figma mock', () async {
-      final history = await repository.getChatHistory();
+      final result = await repository.getChatHistory();
+      expect(result.isSuccess, isTrue);
+      final history = result.data;
       expect(history.length, 3);
       expect(history[0].text, contains("Hello, I'm FitBot!"));
       expect(history[1].text, equals('Show me other options'));
@@ -50,23 +52,36 @@ void main() {
     });
 
     test('Sends user message and generates contextual FitBot recommendation', () async {
-      final reply = await repository.sendMessage('Can you book me a visit in a gym?');
+      final result = await repository.sendMessage('Can you book me a visit in a gym?');
+      expect(result.isSuccess, isTrue);
+      final reply = result.data;
       expect(reply.isFromBot, isTrue);
       expect(reply.hasFacility, isTrue);
       expect(reply.facilityRecommendation!.name, contains('BodyWorks'));
 
-      final fullHistory = await repository.getChatHistory();
+      final histResult = await repository.getChatHistory();
+      expect(histResult.isSuccess, isTrue);
+      final fullHistory = histResult.data;
       // Should now have initial 3 + user msg + bot reply = 5 messages
       expect(fullHistory.length, 5);
     });
 
     test('Successfully books facility and persists to storage', () async {
-      final booked = await repository.bookFacility('g3', DateTime.now());
-      expect(booked, isTrue);
+      final result = await repository.createBooking(
+        facilityId: 'g3',
+        facilityName: 'BodyWorks Gym',
+        facilityAddress: 'East 42nd St',
+        slotTime: 'Today at 04:00 PM',
+        price: '\$20/visit',
+      );
+      expect(result.isSuccess, isTrue);
+      final booking = result.data;
+      expect(booking.facilityId, equals('g3'));
+      expect(booking.isConfirmed, isTrue);
 
       final bookings = mockStorage.read<List<dynamic>>('user_bookings');
       expect(bookings, isNotNull);
-      expect(bookings!.length, 1);
+      expect(bookings!.length, 2);
       expect(bookings[0]['facilityId'], equals('g3'));
     });
   });

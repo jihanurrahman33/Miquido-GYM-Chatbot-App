@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../routes/app_routes.dart';
+import '../controllers/profile_controller.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
   @override
@@ -49,34 +50,57 @@ class ProfileView extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
 
-              // Account Items
+              // Account Options
+              _buildProfileOption(
+                icon: Icons.track_changes_rounded,
+                title: 'Daily Health Targets',
+                subtitle: 'Adjust sleep, calories & step goals',
+                onTap: () => controller.openEditGoalsSheet(context),
+              ),
+              _buildProfileOption(
+                icon: Icons.confirmation_number_outlined,
+                title: 'My Gym Bookings',
+                subtitle: 'Active turnstile passes & reservations',
+                onTap: () => Get.toNamed(AppRoutes.bookings),
+              ),
+              _buildProfileOption(
+                icon: Icons.timer_outlined,
+                title: 'Active Workout Tracker',
+                subtitle: 'Interval session timer & exercise guide',
+                onTap: () => Get.toNamed(AppRoutes.workoutTracker),
+              ),
               _buildProfileOption(
                 icon: Icons.chat_bubble_outline_rounded,
                 title: 'FitBot AI Assistant',
-                subtitle: 'Personal gym concierge & booking',
+                subtitle: 'Personal gym concierge & chat recommendations',
                 onTap: () => Get.toNamed(AppRoutes.chatbot),
               ),
               _buildProfileOption(
-                icon: Icons.bookmark_border_rounded,
-                title: 'My Gym Bookings',
-                subtitle: 'View passes and reservation history',
-                onTap: () {
-                  Get.snackbar('Bookings', 'All bookings saved locally via GetStorage');
-                },
-              ),
-              _buildProfileOption(
                 icon: Icons.notifications_none_rounded,
-                title: 'Workout Reminders',
-                subtitle: 'Daily notifications & target alarms',
-                onTap: () {},
+                title: 'Notifications & Alerts',
+                subtitle: 'Training alarms & pass confirmations',
+                onTap: () => Get.toNamed(AppRoutes.notifications),
               ),
               _buildProfileOption(
-                icon: Icons.privacy_tip_outlined,
-                title: 'Privacy & Storage',
-                subtitle: 'Manage local data cache',
-                onTap: () {},
+                icon: Icons.delete_sweep_outlined,
+                title: 'Reset Local Cache',
+                subtitle: 'Clear stored data & reload Figma defaults',
+                onTap: () {
+                  Get.defaultDialog(
+                    title: 'Reset Storage?',
+                    middleText: 'This will reset your conversation and mock bookings back to default.',
+                    textConfirm: 'Reset',
+                    textCancel: 'Cancel',
+                    confirmTextColor: Colors.white,
+                    buttonColor: Colors.red,
+                    onConfirm: () {
+                      Get.back();
+                      controller.clearCache();
+                    },
+                  );
+                },
               ),
             ],
           ),
@@ -100,35 +124,35 @@ class ProfileView extends StatelessWidget {
           side: const BorderSide(color: AppTheme.borderLight),
         ),
         child: ListTile(
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppTheme.lightBlueBg,
-            borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: AppTheme.lightBlueBg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppTheme.primaryBlue, size: 22),
           ),
-          child: Icon(icon, color: AppTheme.primaryBlue, size: 22),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: AppTheme.darkText,
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.darkText,
+            ),
           ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(
-            fontSize: 13,
-            color: AppTheme.mutedText,
+          subtitle: Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppTheme.mutedText,
+            ),
           ),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.mutedText),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.mutedText),
       ),
-    ),
-  );
+    );
   }
 }

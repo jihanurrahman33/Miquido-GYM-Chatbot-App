@@ -3,92 +3,163 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.47+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![GetX](https://img.shields.io/badge/State%20Management-GetX-8A2BE2)](https://pub.dev/packages/get)
 [![Storage](https://img.shields.io/badge/Local%20Storage-GetStorage-0070F0)](https://pub.dev/packages/get_storage)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean%20%26%20SOLID-00C12B)](#clean-architecture--solid-design)
-[![Tests](https://img.shields.io/badge/Tests-5%20Passed-brightgreen)](https://flutter.dev)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20%26%20SOLID-00C12B)](#-clean-architecture--software-engineering-principles)
+[![Tests](https://img.shields.io/badge/Tests-12%20Passed-brightgreen)](https://flutter.dev)
+[![Analysis](https://img.shields.io/badge/Analyze-0%20Issues-brightgreen)](https://flutter.dev)
 
-A modern, high-performance Flutter Gym & Fitness AI Chatbot application built from the [Miquido Gym Chatbot App Figma Design System](https://www.figma.com/design/9hAHsqg5TmP3NFeG3Jz4ma/Miquido---Gym-Chatbot-App-Concept--Community-). 
+A modern, production-grade Flutter Gym & Fitness AI Chatbot application crafted from the official [Miquido Gym Chatbot App Figma Community Design](https://www.figma.com/design/9hAHsqg5TmP3NFeG3Jz4ma/Miquido---Gym-Chatbot-App-Concept--Community-).
 
-Powered by **GetX** reactive state management, **GetStorage** local persistence, and **Clean Architecture (Domain, Data, Presentation)**.
-
----
-
-## 📱 Implemented Figma Screens
-
-| Screen | Figma Node | Description |
-|---|---|---|
-| **Home Dashboard** | `403:3051` | Upcoming workout cards with custom vector runner illustration, nearby gyms with distance/ratings, and weekly activity curve chart with Wednesday peak indicator & tooltip. |
-| **Statistics** | `403:3246` | Month selector, 7-day week calendar strip with active indicator, Overview metric cards (Cal Burnt, Total Time, Exercises, Breaks), triple concentric progress rings (Sleep 76%, Calories 52%, Steps 33%), and weekly calories bar chart. |
-| **FitBot AI Chatbot** | `403:2913` | Personal sports concierge with active online status, conversation bubble thread, interactive quick-reply chips, gym recommendation cards with amenity tags (Gym, SPA, Pool), and voice/text input bar. |
-| **Facility Details & Booking** | Extension | Dedicated gym view with distance, ratings, pricing, amenities tags, and instant booking with FitBot confirmation. |
-| **Workout Detail & Tracking** | Extension | Workout breakdown, exercise intervals, warmup instructions, and completion logger. |
-| **Explore & Discover** | Extension | Search sports facilities, trainers, and fitness studios. |
-| **Profile & Settings** | Extension | Member account, cache management, and local storage controls. |
+Engineered following **Clean Architecture**, **SOLID Principles**, **Software Design Patterns**, **Functional Error Handling (`Result<T>`)**, **Reactive State Management (GetX)**, and **Local Storage Persistence (GetStorage)**.
 
 ---
 
-## 🏛️ Clean Architecture & SOLID Design
+## 📱 Implemented Screens & User Experience
 
-The codebase strictly adheres to **Clean Architecture** and **SOLID principles**:
+The application implements all core Figma designs plus expanded complementary screens to deliver a complete gym fitness experience:
+
+| # | Screen | Route | Key Features & Figma Source |
+|---|---|---|---|
+| 1 | **Home Dashboard** | `AppRoutes.home` | Figma node `403:3051`. Upcoming workout card with custom vector runner illustration, period filter modal (Weekly, Monthly, Yearly), nearby gym clubs with distance & rating, and smooth cubic Bezier weekly activity chart with Wednesday peak indicator & tooltip. |
+| 2 | **Statistics & Rings** | `AppRoutes.statistics` | Figma node `403:3246`. Interactive 7-day calendar strip with dynamic day selection, overview metric cards (Cal Burnt, Total Time, Exercises, Breaks), custom-painted triple concentric progress rings (Sleep 76%, Calories 52%, Steps 33%), and weekly calories bar chart. |
+| 3 | **FitBot AI Chatbot** | `AppRoutes.chatbot` | Figma node `403:2913`. Sports AI concierge with active status, conversation bubble thread, quick-reply suggestion chips, facility recommendation cards, voice recording simulator with live timer and stop trigger, and direct booking modal. |
+| 4 | **My Gym Bookings & QR Pass** | `AppRoutes.bookings` | Active passes & history tabs, pass details (facility, address, slot time, price), turnstile QR scan code (`MIQ-...`), and instant pass cancellation with live reactive updates. |
+| 5 | **Live Workout Interval Runner** | `AppRoutes.workoutTracker` | Interval exercise runner with active countdown timer (45s–60s), Play/Pause control, automatic progression to next exercise, exercise list tracking, and celebratory completion dialog. |
+| 6 | **Search & Explore Facilities** | `Navigation Index 1` | Real-time facility search powered by GetX `debounce` worker (300ms), horizontal category filter chips (All, Gym, SPA, Pool, CrossFit), detailed facility cards, and empty state handler. |
+| 7 | **Notifications & Alerts** | `AppRoutes.notifications` | Push notification feed with unread indicators, categories (Booking, Workout, Reminder), time stamps, and "Mark All as Read" action. |
+| 8 | **Facility Details & Slot Booking** | `AppRoutes.facilityDetail` | High-res header, amenity badges, price tags, operating hours, full address, and one-tap reservation button connected to FitBot. |
+| 9 | **Profile & Daily Target Editor** | `Navigation Index 3` | Member account summary, streak counters, interactive bottom sheet with sliders to customize Sleep, Calorie, and Step targets with live sync to Statistics, plus cache reset utility. |
+
+---
+
+## 🏛️ Clean Architecture & Software Engineering Principles
+
+The application is structured into four distinct layers adhering to the **Dependency Inversion Principle** and **Feature-First Clean Architecture**:
+
+```mermaid
+graph TD
+    UI[Presentation Layer: Views & Controllers] --> Domain[Domain Layer: Use Cases & Entities]
+    Data[Data Layer: Repositories & Local DataSources] --> Domain
+    Data --> Core[Core: StorageService & Result Monad]
+    UI --> Core
+```
+
+### Layer Responsibility
 
 ```
 lib/
 ├── core/
-│   ├── storage/                # IStorageService abstraction & GetStorage implementation
-│   └── theme/                  # Brand palette, DM Sans typography & theme data
+│   ├── errors/                 # Domain Failure hierarchy (StorageFailure, ValidationFailure, NotFoundFailure)
+│   ├── utils/                  # Functional Result<T> monad (when, fold, data, failure)
+│   ├── widgets/                # Reusable UX widgets: ShimmerLoading, ErrorView, EmptyStateView
+│   ├── storage/                # Storage interface (IStorageService) & GetStorage implementation
+│   └── theme/                  # DM Sans typography, Figma color palette & AppTheme
 ├── features/
 │   ├── home/
-│   │   ├── domain/             # Pure Dart entities, repository contracts & usecases
-│   │   ├── data/               # Models with JSON serialization & local data sources
-│   │   └── presentation/       # GetX controllers, views & custom painters
+│   │   ├── domain/             # WorkoutEntity, ActivityPointEntity, IHomeRepository, GetHomeDataUseCase
+│   │   ├── data/               # Models (WorkoutModel, ActivityPointModel), HomeLocalDataSource, HomeRepositoryImpl
+│   │   └── presentation/       # HomeController, WorkoutTrackerController, HomeView, WorkoutTrackerView
 │   ├── statistics/
-│   │   ├── domain/             # UserMetricEntity, DayProgressEntity & usecases
-│   │   ├── data/               # Local datasource & storage persistence
-│   │   └── presentation/       # ConcentricProgressRings, WeekCalendarStrip & chart
+│   │   ├── domain/             # UserMetricEntity, DayProgressEntity, IStatisticsRepository, GetUserMetricsUseCase
+│   │   ├── data/               # Models, StatisticsLocalDataSource, StatisticsRepositoryImpl
+│   │   └── presentation/       # StatisticsController, StatisticsView, ConcentricProgressRings, WeekCalendarStrip
 │   ├── chatbot/
-│   │   ├── domain/             # ChatMessageEntity, GymFacilityEntity & usecases
-│   │   ├── data/               # Conversational logic engine & booking persistence
-│   │   └── presentation/       # FitBot chat bubbles, facility card & input dock
+│   │   ├── domain/             # ChatMessageEntity, GymFacilityEntity, GymBookingEntity, IChatbotRepository, UseCases
+│   │   ├── data/               # Models with JSON serialization, ChatbotLocalDataSource, ChatbotRepositoryImpl
+│   │   └── presentation/       # ChatbotController, BookingsController, ChatbotView, BookingsView
 │   ├── facilities/
-│   │   └── presentation/       # Facility details & pass booking modal
+│   │   └── presentation/       # FacilityDetailView
+│   ├── notifications/
+│   │   ├── domain/             # NotificationItemEntity
+│   │   └── presentation/       # NotificationController, NotificationsView
 │   └── navigation/
-│       └── presentation/       # Floating rounded pill nav bar & master scaffold
+│       └── presentation/       # MainNavigationView, FloatingNavBar, SearchExploreView, ProfileView
 └── routes/
-    ├── app_routes.dart         # Type-safe route definitions
-    └── app_pages.dart          # Route configurations & dependency injection bindings
+    ├── app_routes.dart         # Type-safe string route constants
+    └── app_pages.dart          # GetPage declarations with custom page transitions
 ```
 
-### SOLID Adherence:
-- **Single Responsibility Principle (SRP):** Each controller, use case, and repository manages a single bounded domain.
-- **Open/Closed Principle (OCP):** Use cases and storage services depend on abstractions (`IStorageService`, `IHomeRepository`, `IChatbotRepository`), easily extendable without modifying existing code.
-- **Liskov Substitution Principle (LSP):** `StorageService` seamlessly substitutes `IStorageService`, enabling zero-cost mock injection in tests.
-- **Interface Segregation Principle (ISP):** Contracts are granular and specific.
-- **Dependency Inversion Principle (DIP):** High-level domain logic never imports data or presentation modules.
+---
+
+## 💎 SOLID Principles Implementation
+
+| Principle | Architectural Implementation in Code |
+|---|---|
+| **Single Responsibility (SRP)** | Every class has one reason to change. Use cases (`GetHomeDataUseCase`, `CreateGymBookingUseCase`, `GetUserMetricsUseCase`) encapsulate a single business action. Controllers manage UI state only; datasources handle raw storage I/O. |
+| **Open/Closed (OCP)** | Storage and data retrieval depend on contracts (`IStorageService`, `IHomeRepository`, `IChatbotRepository`). Adding a remote REST/GraphQL backend requires writing an implementation of the interface without altering domain use cases or presentation controllers. |
+| **Liskov Substitution (LSP)** | `StorageService` implements `IStorageService`. In test suites, `MockStorageService` substitutes it cleanly without side effects or altered invariants. |
+| **Interface Segregation (ISP)** | Interfaces are compact and domain-focused. Distinct use cases exist for specific operations (`GetUserBookingsUseCase`, `CancelBookingUseCase`, `CreateGymBookingUseCase`) rather than monolithic God-interfaces. |
+| **Dependency Inversion (DIP)** | High-level business logic does not depend on low-level storage details. In `NavigationBinding`, interfaces are bound via `Get.lazyPut<IHomeRepository>(() => HomeRepositoryImpl(...))`. |
 
 ---
 
-## 🚀 Key Features
+## 🎨 Design Patterns Implemented
 
-- **⚡ Reactive State Management:** Powered by GetX reactive observables (`RxBool`, `RxList`, `Rxn`) with fine-grained UI rebuilds.
-- **💾 Local Storage Persistence:** Uses `GetStorage` to persist conversation history, gym pass bookings, and user metrics across app restarts.
-- **🎨 Custom Vector Graphics:**
-  - `ConcentricProgressRings`: Custom-painted triple concentric rings with glowing progress endpoints.
-  - `ActivitiesChart`: Smooth cubic Bezier curve with gradient fill and peak tooltip pill (`3h 14min`).
-  - `WorkoutCard`: Custom-painted runner vector illustration on treadmill platform.
-  - `FloatingNavBar`: Rounded floating pill bottom navigation bar matching the Figma prototype.
-- **🤖 Contextual FitBot Assistant:**
-  - Natural conversation replies for gym bookings, routines, calorie tracking, and facility options.
-  - Interactive quick reply suggestion chips.
-  - Facility booking engine with instant snackbar confirmations.
+1. **Repository Pattern:** Separates business domain from data persistence (`IHomeRepository`, `IStatisticsRepository`, `IChatbotRepository`).
+2. **Use Case Pattern (Interactor):** Encapsulates business rules and orchestrates data flow into single-purpose invokable classes.
+3. **Result Monad Pattern (`Result<T>`):** Functional error handling returning either `Result.success(data)` or `Result.failure(failure)`, eliminating uncaught runtime exceptions.
+4. **Observer / Reactive Pattern:** GetX `RxList`, `RxBool`, `RxString`, and `.obs` primitives enabling precise micro-updates without full widget-tree rebuilding.
+5. **Debounce Pattern:** `debounce(searchQuery, ...)` in `SearchExploreController` prevents excessive queries during rapid user typing.
+6. **Factory / DTO Pattern:** Separate `Model` classes with `fromJson()` / `toJson()` that map cleanly into immutable pure Dart `Entities`.
 
 ---
 
-## 🛠️ Getting Started
+## 🌟 Top-Tier UX Highlights
+
+- **Custom Vector Graphics & Painters:**
+  - `ConcentricProgressRings`: Hand-crafted custom painter rendering triple circular arcs with smooth stroke caps and glow endpoints.
+  - `ActivitiesChart`: Cubic Bezier spline with gradient shader and an interactive Wednesday peak indicator (`3h 14min`).
+  - `WorkoutCard`: Custom vector treadmill platform and runner silhouette.
+  - `FloatingNavBar`: Elevated floating pill bottom bar matching Figma specifications with active indicator dots.
+- **Micro-Interactions & States:**
+  - **Shimmer Skeleton Loading:** Smooth animated gradients displayed during data acquisition.
+  - **Standardized Error Views:** Actionable retry buttons and informative failure messages.
+  - **Standardized Empty States:** Engaging icons, clear typography, and navigation triggers.
+  - **Audio Recording Feedback:** Pulse timer banner and one-tap voice query simulation.
+  - **Turnstile QR Pass Generation:** Digital access pass format for seamless gym check-in.
+
+---
+
+## 🧪 Test Suite & Code Quality
+
+The project features comprehensive automated tests verifying domain use cases, repository operations, local storage persistence, state machines, and widget smoke tests:
+
+```bash
+flutter test
+```
+
+### Test Coverage Summary:
+- `test/unit/bookings_usecases_test.dart`:
+  - `GetUserBookingsUseCase` returns initial seed passes.
+  - `CreateGymBookingUseCase` produces valid bookings with turnstile QR codes (`MIQ-...`).
+  - `CancelBookingUseCase` transitions pass state to cancelled and persists.
+- `test/unit/chatbot_repository_test.dart`:
+  - Loads Figma mock initial conversation history.
+  - Generates contextual FitBot recommendations.
+  - Persists bookings into storage.
+- `test/unit/statistics_usecase_test.dart`:
+  - Validates metric aggregates (Cal Burnt, Total Time, Exercises, Breaks).
+  - Validates concentric ring progress percentages for Sleep, Calories, and Steps.
+- `test/unit/workout_tracker_test.dart`:
+  - Verifies interval timer toggling (start/pause).
+  - Exercises progression through workouts and triggers completion state.
+- `test/widget_test.dart`:
+  - Smoke test validating dependency injection, root navigation, and initial screen rendering.
+
+```bash
+flutter analyze
+# Analyzing Miquido...
+# No issues found! (ran in 3.2s)
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Flutter SDK `^3.13.2` or higher
-- Dart SDK `^3.13.2`
+- **Flutter SDK:** `>=3.13.2`
+- **Dart SDK:** `>=3.13.2`
 
-### Installation
+### Setup Steps
 
 1. **Clone the repository:**
    ```bash
@@ -96,39 +167,28 @@ lib/
    cd Miquido-GYM-Chatbot-App
    ```
 
-2. **Install dependencies:**
+2. **Fetch dependencies:**
    ```bash
    flutter pub get
    ```
 
-3. **Run static analysis:**
+3. **Run code analysis:**
    ```bash
    flutter analyze
    ```
 
-4. **Run test suite:**
+4. **Execute all automated tests:**
    ```bash
    flutter test
    ```
 
 5. **Run the application:**
    ```bash
+   # Run on connected iOS Simulator, Android Emulator, macOS Desktop, or Chrome
    flutter run
    ```
 
 ---
 
-## 🧪 Testing
-
-The project includes unit and widget tests verifying clean architecture layers and local storage behavior:
-```bash
-flutter test
-```
-- `test/unit/chatbot_repository_test.dart`: Validates conversation flow, bot responses, and booking persistence.
-- `test/unit/statistics_usecase_test.dart`: Validates metrics calculation and concentric ring percentages.
-- `test/widget_test.dart`: Smoke test verifying root views, navigation, and dependency injection.
-
----
-
 ## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open-source and released under the [MIT License](LICENSE).

@@ -1,4 +1,6 @@
+import '../../../../core/utils/result.dart';
 import '../entities/chat_message_entity.dart';
+import '../entities/gym_booking_entity.dart';
 import '../repositories/i_chatbot_repository.dart';
 
 class GetChatHistoryUseCase {
@@ -6,7 +8,7 @@ class GetChatHistoryUseCase {
 
   GetChatHistoryUseCase(this._repository);
 
-  Future<List<ChatMessageEntity>> execute() {
+  Future<Result<List<ChatMessageEntity>>> execute() {
     return _repository.getChatHistory();
   }
 }
@@ -16,7 +18,7 @@ class SendChatMessageUseCase {
 
   SendChatMessageUseCase(this._repository);
 
-  Future<ChatMessageEntity> execute(String text) {
+  Future<Result<ChatMessageEntity>> execute(String text) {
     return _repository.sendMessage(text);
   }
 }
@@ -26,7 +28,19 @@ class BookGymFacilityUseCase {
 
   BookGymFacilityUseCase(this._repository);
 
-  Future<bool> execute(String facilityId, DateTime preferredTime) {
-    return _repository.bookFacility(facilityId, preferredTime);
+  Future<Result<GymBookingEntity>> execute({
+    required String facilityId,
+    required String facilityName,
+    required String facilityAddress,
+    required String slotTime,
+    required String price,
+  }) {
+    return _repository.createBooking(
+      facilityId: facilityId,
+      facilityName: facilityName,
+      facilityAddress: facilityAddress,
+      slotTime: slotTime,
+      price: price,
+    );
   }
 }

@@ -1,5 +1,6 @@
 import '../../../../core/storage/storage_service.dart';
 import '../models/chat_message_model.dart';
+import '../models/gym_booking_model.dart';
 import '../models/gym_facility_model.dart';
 import '../../domain/entities/chat_message_entity.dart';
 
@@ -7,7 +8,9 @@ abstract class IChatbotLocalDataSource {
   Future<List<ChatMessageModel>> getMessages();
   Future<void> saveMessages(List<ChatMessageModel> messages);
   Future<List<GymFacilityModel>> getFacilities();
-  Future<bool> bookFacility(String facilityId, DateTime preferredTime);
+  Future<List<GymBookingModel>> getBookings();
+  Future<GymBookingModel> createBooking(GymBookingModel booking);
+  Future<bool> cancelBooking(String bookingId);
   Future<void> clearHistory();
 }
 
@@ -49,6 +52,17 @@ class ChatbotLocalDataSource implements IChatbotLocalDataSource {
       priceInfo: '35 zł/entrance',
       amenities: ['Gym', 'SPA', 'Sauna'],
       description: 'Relaxing boutique gym and thermal bath complex open round-the-clock.',
+    ),
+    GymFacilityModel(
+      id: 'g4',
+      name: 'PowerStudio Crossfit',
+      address: 'Grzegórzecka 18',
+      distanceMeters: 800,
+      openingHours: '07:00 AM – 10:00 PM',
+      rating: 4.8,
+      priceInfo: '40 zł/drop-in class',
+      amenities: ['Gym', 'CrossFit', 'Showers'],
+      description: 'High intensity strength and conditioning facility with Olympic lifting platforms.',
     ),
   ];
 
@@ -111,18 +125,60 @@ class ChatbotLocalDataSource implements IChatbotLocalDataSource {
   }
 
   @override
-  Future<bool> bookFacility(String facilityId, DateTime preferredTime) async {
-    final existingBookings = _storageService.read<List<dynamic>>('user_bookings') ?? [];
-    final newBooking = {
-      'id': 'book_${DateTime.now().millisecondsSinceEpoch}',
-      'facilityId': facilityId,
-      'preferredTime': preferredTime.toIso8601String(),
-      'status': 'confirmed',
-      'createdAt': DateTime.now().toIso8601String(),
-    };
+  Future<List<GymBookingModel>> getBookings() async {
+    final raw = _storageService.read<List<dynamic>>('user_bookings');
+    if (raw != null && raw.isNotEmpty) {
+      return raw.map((e) => GymBookingModel.fromJson(Map<String, dynamic>.from(e))).toList();
+    }
 
-    final updated = List<dynamic>.from(existingBookings)..add(newBooking);
-    await _storageService.write('user_bookings', updated);
+    // Default initial confirmed booking
+    final initialBookings = [
+      GymBookingModel(
+        id: 'book_initial_1',
+        facilityId: 'g3',
+        facilityName: 'BodyWorks',
+        facilityAddress: 'Nadwiślańska 12 street',
+        slotTime: 'Today at 04:00 PM',
+        date: DateTime.now(),
+        price: '30 zł',
+        status: 'confirmed',
+        qrCodeData: 'MIQUIDO-BW-PASS-99214',
+      ),
+    ];
+
+    await _storageService.write('user_bookings', initialBookings.map((e) => e.toJson()).toList());
+    return initialBookings;
+  }
+
+  @override
+  Future<GymBookingModel> createBooking(GymBookingModel booking) async {
+    final current = await getBookings();
+    final updated = List<GymBookingModel>.from(current)..insert(0, booking);
+    await _storageService.write('user_bookings', updated.map((e) => e.toJson()).toList());
+    return booking;
+  }
+
+  @override
+  Future<bool> cancelBooking(String bookingId) async {
+    final current = await getBookings();
+    final updated = current.map((b) {
+      if (b.id == bookingId) {
+        return GymBookingModel(
+          id: b.id,
+          facilityId: b.facilityId,
+          facilityName: b.facilityName,
+          facilityAddress: b.facilityAddress,
+          slotTime: b.slotTime,
+          date: b.date,
+          price: b.price,
+          status: 'cancelled',
+          qrCodeData: b.qrCodeData,
+        );
+      }
+      return b;
+    }).toList();
+
+    await _storageService.write('user_bookings', updated.map((e) => e.toJson()).toList());
     return true;
   }
 

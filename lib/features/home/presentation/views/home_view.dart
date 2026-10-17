@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/shimmer_loading.dart';
 import '../../../../routes/app_routes.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/workout_card.dart';
@@ -18,8 +20,13 @@ class HomeView extends GetView<HomeController> {
         bottom: false,
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppTheme.primaryBlue),
+            return _buildLoadingSkeleton();
+          }
+
+          if (controller.errorMessage.value.isNotEmpty) {
+            return ErrorView(
+              message: controller.errorMessage.value,
+              onRetry: controller.loadDashboardData,
             );
           }
 
@@ -37,7 +44,7 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       _buildCircleIconButton(
                         icon: Icons.grid_view_rounded,
-                        onTap: () {},
+                        onTap: () => _showQuickActionsSheet(context),
                       ),
                       Row(
                         children: [
@@ -48,13 +55,7 @@ class HomeView extends GetView<HomeController> {
                           const SizedBox(width: 12),
                           _buildCircleIconButton(
                             icon: Icons.notifications_none_rounded,
-                            onTap: () {
-                              Get.snackbar(
-                                'Notifications',
-                                'No new alerts. Keep up your active streak!',
-                                snackPosition: SnackPosition.TOP,
-                              );
-                            },
+                            onTap: () => Get.toNamed(AppRoutes.notifications),
                           ),
                         ],
                       ),
@@ -97,7 +98,7 @@ class HomeView extends GetView<HomeController> {
 
                 // Workout Cards Carousel
                 SizedBox(
-                  height: 175,
+                  height: 180,
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     scrollDirection: Axis.horizontal,
@@ -194,29 +195,32 @@ class HomeView extends GetView<HomeController> {
                           color: AppTheme.darkText,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppTheme.lightBlueBg,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              controller.selectedPeriod.value,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
+                      GestureDetector(
+                        onTap: () => _showPeriodPicker(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: AppTheme.lightBlueBg,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                controller.selectedPeriod.value,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.primaryBlue,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 18,
                                 color: AppTheme.primaryBlue,
                               ),
-                            ),
-                            const SizedBox(width: 4),
-                            const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              size: 18,
-                              color: AppTheme.primaryBlue,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -259,6 +263,118 @@ class HomeView extends GetView<HomeController> {
           size: 20,
           color: AppTheme.darkText,
         ),
+      ),
+    );
+  }
+
+  void _showPeriodPicker(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Select Activity View',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              title: const Text('Weekly Overview'),
+              trailing: controller.selectedPeriod.value == 'Weekly'
+                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                  : null,
+              onTap: () {
+                Get.back();
+                controller.changePeriod('Weekly');
+              },
+            ),
+            ListTile(
+              title: const Text('Monthly Overview'),
+              trailing: controller.selectedPeriod.value == 'Monthly'
+                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                  : null,
+              onTap: () {
+                Get.back();
+                controller.changePeriod('Monthly');
+              },
+            ),
+            ListTile(
+              title: const Text('Yearly Overview'),
+              trailing: controller.selectedPeriod.value == 'Yearly'
+                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                  : null,
+              onTap: () {
+                Get.back();
+                controller.changePeriod('Yearly');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showQuickActionsSheet(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Wrap(
+          runSpacing: 16,
+          children: [
+            const Text(
+              'Quick Actions',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            ListTile(
+              leading: const Icon(Icons.timer_outlined, color: AppTheme.primaryBlue),
+              title: const Text('Start Workout Session'),
+              subtitle: const Text('Launch live interval countdown timer'),
+              onTap: () {
+                Get.back();
+                Get.toNamed(AppRoutes.workoutTracker);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.confirmation_number_outlined, color: AppTheme.primaryBlue),
+              title: const Text('My Booked Passes'),
+              subtitle: const Text('View and scan turnstile tickets'),
+              onTap: () {
+                Get.back();
+                Get.toNamed(AppRoutes.bookings);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          ShimmerLoading(width: 140, height: 32),
+          SizedBox(height: 24),
+          ShimmerLoading(width: double.infinity, height: 180, borderRadius: 24),
+          SizedBox(height: 32),
+          ShimmerLoading(width: 180, height: 24),
+          SizedBox(height: 16),
+          ShimmerLoading(width: double.infinity, height: 140, borderRadius: 20),
+          SizedBox(height: 32),
+          ShimmerLoading(width: double.infinity, height: 200, borderRadius: 24),
+        ],
       ),
     );
   }

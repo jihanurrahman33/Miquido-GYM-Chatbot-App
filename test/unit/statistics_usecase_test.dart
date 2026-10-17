@@ -45,21 +45,23 @@ void main() {
 
     test('Fetches statistics and verifies ring progress calculations', () async {
       final result = await useCase.execute();
+      expect(result.isSuccess, isTrue);
+      final data = result.data;
 
-      expect(result.metrics.calBurnt, equals('3.950'));
-      expect(result.metrics.totalTime, equals('3h 14min'));
-      expect(result.metrics.exercises, equals(15));
-      expect(result.metrics.breaks, equals(5));
+      expect(data.metrics.calBurnt, equals('3.950'));
+      expect(data.metrics.totalTime, equals('3h 14min'));
+      expect(data.metrics.exercises, equals(15));
+      expect(data.metrics.breaks, equals(5));
 
       // Progress checks
-      expect(result.metrics.sleepProgress, closeTo(6.083 / 8.0, 0.01));
-      expect(result.metrics.caloriesProgress, closeTo(1050 / 2000, 0.01));
-      expect(result.metrics.stepsProgress, closeTo(2015 / 6000, 0.01));
+      expect(data.metrics.sleepProgress, closeTo(6.083 / 8.0, 0.01));
+      expect(data.metrics.caloriesProgress, closeTo(1050 / 2000, 0.01));
+      expect(data.metrics.stepsProgress, closeTo(2015 / 6000, 0.01));
 
       // Weekdays
-      expect(result.weekDays.length, equals(7));
-      expect(result.weekDays[2].dayNumber, equals(15));
-      expect(result.weekDays[2].isSelected, isTrue);
+      expect(data.weekDays.length, equals(7));
+      expect(data.weekDays[2].dayNumber, equals(15));
+      expect(data.weekDays[2].isSelected, isTrue);
     });
   });
 }

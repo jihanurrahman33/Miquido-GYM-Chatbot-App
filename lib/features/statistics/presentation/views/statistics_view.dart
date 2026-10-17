@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/shimmer_loading.dart';
 import '../controllers/statistics_controller.dart';
 import '../widgets/week_calendar_strip.dart';
 import '../widgets/overview_stat_card.dart';
@@ -19,8 +21,31 @@ class StatisticsView extends GetView<StatisticsController> {
         bottom: false,
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppTheme.primaryBlue),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  ShimmerLoading(width: 160, height: 32),
+                  SizedBox(height: 12),
+                  ShimmerLoading(width: 100, height: 20),
+                  SizedBox(height: 24),
+                  ShimmerLoading(width: double.infinity, height: 50, borderRadius: 14),
+                  SizedBox(height: 32),
+                  ShimmerLoading(width: 140, height: 24),
+                  SizedBox(height: 16),
+                  ShimmerLoading(width: double.infinity, height: 130, borderRadius: 20),
+                  SizedBox(height: 32),
+                  ShimmerLoading(width: double.infinity, height: 180, borderRadius: 24),
+                ],
+              ),
+            );
+          }
+
+          if (controller.errorMessage.value.isNotEmpty) {
+            return ErrorView(
+              message: controller.errorMessage.value,
+              onRetry: controller.loadStatistics,
             );
           }
 

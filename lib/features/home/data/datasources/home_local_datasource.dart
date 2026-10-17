@@ -6,7 +6,7 @@ import '../../../chatbot/data/models/gym_facility_model.dart';
 abstract class IHomeLocalDataSource {
   Future<List<WorkoutModel>> getWorkouts();
   Future<List<GymFacilityModel>> getNearbyGyms();
-  Future<List<ActivityPointModel>> getWeeklyActivities();
+  Future<List<ActivityPointModel>> getWeeklyActivities([String period = 'Weekly']);
 }
 
 class HomeLocalDataSource implements IHomeLocalDataSource {
@@ -73,7 +73,7 @@ class HomeLocalDataSource implements IHomeLocalDataSource {
         openingHours: '10:00 AM – 11:00 PM',
         rating: 5.0,
         priceInfo: '25 zł/entrance',
-        amenities: ['Gym', 'Showers', 'Lockers'],
+        amenities: ['Gym', 'Showers', 'CrossFit'],
         description: 'Modern gym facility with premium equipment and professional personal trainers.',
       ),
       const GymFacilityModel(
@@ -108,8 +108,24 @@ class HomeLocalDataSource implements IHomeLocalDataSource {
   }
 
   @override
-  Future<List<ActivityPointModel>> getWeeklyActivities() async {
-    // Activity data with Wednesday peak at 3h 14min matching Figma 403:3051 & 403:2897
+  Future<List<ActivityPointModel>> getWeeklyActivities([String period = 'Weekly']) async {
+    if (period == 'Monthly') {
+      return const [
+        ActivityPointModel(dayShort: 'W1', durationHours: 2.2, tooltipText: '2h 12min'),
+        ActivityPointModel(dayShort: 'W2', durationHours: 3.5, tooltipText: '3h 30min'),
+        ActivityPointModel(dayShort: 'W3', durationHours: 4.1, tooltipText: '4h 06min', isPeak: true),
+        ActivityPointModel(dayShort: 'W4', durationHours: 2.8, tooltipText: '2h 48min'),
+      ];
+    } else if (period == 'Yearly') {
+      return const [
+        ActivityPointModel(dayShort: 'Q1', durationHours: 2.9, tooltipText: '2h 54min'),
+        ActivityPointModel(dayShort: 'Q2', durationHours: 3.8, tooltipText: '3h 48min', isPeak: true),
+        ActivityPointModel(dayShort: 'Q3', durationHours: 3.1, tooltipText: '3h 06min'),
+        ActivityPointModel(dayShort: 'Q4', durationHours: 2.4, tooltipText: '2h 24min'),
+      ];
+    }
+
+    // Default Weekly data matching Figma 403:3051 & 403:2897
     return const [
       ActivityPointModel(dayShort: 'Mon', durationHours: 1.8, tooltipText: '1h 50min'),
       ActivityPointModel(dayShort: 'Tue', durationHours: 2.7, tooltipText: '2h 45min'),

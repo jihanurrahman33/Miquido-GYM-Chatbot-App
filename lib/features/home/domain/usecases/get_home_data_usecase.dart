@@ -1,3 +1,5 @@
+import '../../../../core/errors/failures.dart';
+import '../../../../core/utils/result.dart';
 import '../entities/workout_entity.dart';
 import '../entities/activity_point_entity.dart';
 import '../../../chatbot/domain/entities/gym_facility_entity.dart';
@@ -20,15 +22,27 @@ class GetHomeDataUseCase {
 
   GetHomeDataUseCase(this._repository);
 
-  Future<HomeDashboardData> execute() async {
-    final workouts = await _repository.getUpcomingWorkouts();
-    final gyms = await _repository.getNearbyGyms();
-    final activities = await _repository.getWeeklyActivities();
+  Future<Result<HomeDashboardData>> execute([String period = 'Weekly']) async {
+    try {
+      final workoutsResult = await _repository.getUpcomingWorkouts();
+      final gymsResult = await _repository.getNearbyGyms();
+      final activitiesResult = await _repository.getWeeklyActivities(period);
 
-    return HomeDashboardData(
-      workouts: workouts,
-      nearbyGyms: gyms,
-      weeklyActivities: activities,
-    );
+      if (workoutsResult.isFailure) return Result.failure(workoutsResult.failure);
+      if (gymsResult.isFailure) return Result.failure(gymsResult.failure);
+      if (activitiesResult.isFailure) return Result.failure(activitiesResult.failure);
+
+      return Result.success(HomeDashboardData(
+        workouts: workoutsResult.data,
+        nearbyGyms: gymsResult.data,
+        weeklyActivities: activitiesResult.data,
+      ));
+    } catch (e) {
+      return Result.failure(UnexpectedFailure('Failed to load dashboard data: $e'));
+    }
+  }
+
+  Future<Result<List<ActivityPointEntity>>> getActivitiesForPeriod(String period) {
+    return _repository.getWeeklyActivities(period);
   }
 }

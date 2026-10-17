@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../routes/app_routes.dart';
 import '../controllers/chatbot_controller.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_input_bar.dart';
@@ -158,10 +157,7 @@ class ChatbotView extends GetView<ChatbotController> {
                       message: msg,
                       onQuickReply: controller.onQuickReplyTapped,
                       onFacilityTap: (facility) {
-                        Get.toNamed(
-                          AppRoutes.facilityDetail,
-                          arguments: facility,
-                        );
+                        controller.openBookingModal(context, facility);
                       },
                     );
                   }
@@ -221,19 +217,59 @@ class ChatbotView extends GetView<ChatbotController> {
             }),
           ),
 
+          // Audio Recording Banner
+          Obx(() {
+            if (!controller.isRecordingAudio.value) return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF2F2),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFFCA5A5)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFEF4444),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Listening... (${controller.recordingSeconds.value}s) - Speak now',
+                      style: const TextStyle(
+                        color: Color(0xFFB91C1C),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: controller.toggleVoiceRecording,
+                    child: const Text(
+                      'Stop',
+                      style: TextStyle(
+                        color: Color(0xFFEF4444),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+
           // Bottom Input Bar
           ChatInputBar(
             controller: controller.inputController,
             onSend: () => controller.sendMessage(),
-            onMicTap: () {
-              Get.snackbar(
-                'Voice Assistant',
-                'Listening... (Voice command simulated)',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: AppTheme.navBarDark,
-                colorText: Colors.white,
-              );
-            },
+            onMicTap: () => controller.toggleVoiceRecording(),
           ),
         ],
       ),

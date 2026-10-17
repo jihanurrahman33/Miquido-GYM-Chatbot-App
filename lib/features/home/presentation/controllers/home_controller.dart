@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   HomeController(this._getHomeDataUseCase);
 
   final RxBool isLoading = true.obs;
+  final RxString errorMessage = ''.obs;
   final RxList<WorkoutEntity> workouts = <WorkoutEntity>[].obs;
   final RxList<GymFacilityEntity> nearbyGyms = <GymFacilityEntity>[].obs;
   final RxList<ActivityPointEntity> weeklyActivities = <ActivityPointEntity>[].obs;
@@ -24,18 +25,34 @@ class HomeController extends GetxController {
   Future<void> loadDashboardData() async {
     try {
       isLoading.value = true;
-      final data = await _getHomeDataUseCase.execute();
-      workouts.assignAll(data.workouts);
-      nearbyGyms.assignAll(data.nearbyGyms);
-      weeklyActivities.assignAll(data.weeklyActivities);
+      errorMessage.value = '';
+
+      final result = await _getHomeDataUseCase.execute(selectedPeriod.value);
+      result.when(
+        success: (data) {
+          workouts.assignAll(data.workouts);
+          nearbyGyms.assignAll(data.nearbyGyms);
+          weeklyActivities.assignAll(data.weeklyActivities);
+        },
+        failure: (failure) {
+          errorMessage.value = failure.message;
+        },
+      );
     } catch (e) {
-      // In case of error
+      errorMessage.value = 'Failed to load home data: $e';
     } finally {
       isLoading.value = false;
     }
   }
 
-  void changePeriod(String newPeriod) {
+  Future<void> changePeriod(String newPeriod) async {
     selectedPeriod.value = newPeriod;
+    final result = await _getHomeDataUseCase.getActivitiesForPeriod(newPeriod);
+    result.when(
+      success: (points) {
+        weeklyActivities.assignAll(points);
+      },
+      failure: (_) {},
+    );
   }
 }
