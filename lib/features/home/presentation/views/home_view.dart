@@ -270,52 +270,52 @@ class HomeView extends GetView<HomeController> {
 
   void _showPeriodPicker(BuildContext context) {
     Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Select Activity View',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              title: const Text('Weekly Overview'),
-              trailing: controller.selectedPeriod.value == 'Weekly'
-                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
-                  : null,
-              onTap: () {
-                Get.back();
-                controller.changePeriod('Weekly');
-              },
-            ),
-            ListTile(
-              title: const Text('Monthly Overview'),
-              trailing: controller.selectedPeriod.value == 'Monthly'
-                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
-                  : null,
-              onTap: () {
-                Get.back();
-                controller.changePeriod('Monthly');
-              },
-            ),
-            ListTile(
-              title: const Text('Yearly Overview'),
-              trailing: controller.selectedPeriod.value == 'Yearly'
-                  ? const Icon(Icons.check, color: AppTheme.primaryBlue)
-                  : null,
-              onTap: () {
-                Get.back();
-                controller.changePeriod('Yearly');
-              },
-            ),
-          ],
+      Material(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Select Activity View',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: const Text('Weekly Overview'),
+                trailing: controller.selectedPeriod.value == 'Weekly'
+                    ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                    : null,
+                onTap: () {
+                  Get.back();
+                  controller.changePeriod('Weekly');
+                },
+              ),
+              ListTile(
+                title: const Text('Monthly Overview'),
+                trailing: controller.selectedPeriod.value == 'Monthly'
+                    ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                    : null,
+                onTap: () {
+                  Get.back();
+                  controller.changePeriod('Monthly');
+                },
+              ),
+              ListTile(
+                title: const Text('Yearly Overview'),
+                trailing: controller.selectedPeriod.value == 'Yearly'
+                    ? const Icon(Icons.check, color: AppTheme.primaryBlue)
+                    : null,
+                onTap: () {
+                  Get.back();
+                  controller.changePeriod('Yearly');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -323,38 +323,38 @@ class HomeView extends GetView<HomeController> {
 
   void _showQuickActionsSheet(BuildContext context) {
     Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Wrap(
-          runSpacing: 16,
-          children: [
-            const Text(
-              'Quick Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            ListTile(
-              leading: const Icon(Icons.timer_outlined, color: AppTheme.primaryBlue),
-              title: const Text('Start Workout Session'),
-              subtitle: const Text('Launch live interval countdown timer'),
-              onTap: () {
-                Get.back();
-                Get.toNamed(AppRoutes.workoutTracker);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.confirmation_number_outlined, color: AppTheme.primaryBlue),
-              title: const Text('My Booked Passes'),
-              subtitle: const Text('View and scan turnstile tickets'),
-              onTap: () {
-                Get.back();
-                Get.toNamed(AppRoutes.bookings);
-              },
-            ),
-          ],
+      Material(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Wrap(
+            runSpacing: 16,
+            children: [
+              const Text(
+                'Quick Actions',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              ListTile(
+                leading: const Icon(Icons.timer_outlined, color: AppTheme.primaryBlue),
+                title: const Text('Start Workout Session'),
+                subtitle: const Text('Launch live interval countdown timer'),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(AppRoutes.workoutTracker);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.confirmation_number_outlined, color: AppTheme.primaryBlue),
+                title: const Text('My Booked Passes'),
+                subtitle: const Text('View and scan turnstile tickets'),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed(AppRoutes.bookings);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

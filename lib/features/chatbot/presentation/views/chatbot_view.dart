@@ -278,38 +278,38 @@ class ChatbotView extends GetView<ChatbotController> {
 
   void _showChatOptions(BuildContext context) {
     Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Wrap(
-          runSpacing: 16,
-          children: [
-            const Text(
-              'Chatbot Settings',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            ListTile(
-              leading: const Icon(Icons.refresh_rounded, color: AppTheme.primaryBlue),
-              title: const Text('Reset Conversation'),
-              subtitle: const Text('Restore default Figma example conversation'),
-              onTap: () {
-                Get.back();
-                controller.loadHistory();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.fitness_center_rounded, color: AppTheme.primaryBlue),
-              title: const Text('Quick Gym Pass Booking'),
-              subtitle: const Text('Book immediate pass at nearby gym'),
-              onTap: () {
-                Get.back();
-                controller.sendMessage('Book me a visit in a gym');
-              },
-            ),
-          ],
+      Material(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Wrap(
+            runSpacing: 16,
+            children: [
+              const Text(
+                'Chatbot Settings',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              ListTile(
+                leading: const Icon(Icons.refresh_rounded, color: AppTheme.primaryBlue),
+                title: const Text('Reset Conversation'),
+                subtitle: const Text('Restore default Figma example conversation'),
+                onTap: () {
+                  Get.back();
+                  controller.loadHistory();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.fitness_center_rounded, color: AppTheme.primaryBlue),
+                title: const Text('Quick Gym Pass Booking'),
+                subtitle: const Text('Book immediate pass at nearby gym'),
+                onTap: () {
+                  Get.back();
+                  controller.sendMessage('Book me a visit in a gym');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
